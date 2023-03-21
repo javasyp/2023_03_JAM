@@ -109,8 +109,12 @@ public class Main {
 					System.out.println(sql);
 
 					pstmt = conn.prepareStatement(sql);
-
+					
 					rs = pstmt.executeQuery(sql);
+					
+					int affectedRow = pstmt.executeUpdate();
+
+					System.out.println("affectedRow : " + affectedRow);
 
 					while (rs.next()) {
 						int id = rs.getInt("id");
@@ -154,7 +158,7 @@ public class Main {
 				}
 				
 				if (articles.size() == 0) {
-					System.out.println("게시글이 없습니다");
+					System.out.println("게시글이 없습니다.");
 					continue;
 				}
 
@@ -164,6 +168,63 @@ public class Main {
 					System.out.printf("%d   /   %s\n", article.id, article.title);
 				}
 				
+			} else if (cmd.startsWith("article modify ")) {
+				int id = Integer.parseInt(cmd.split(" ")[2]);
+				
+				System.out.println("--- 게시물 수정 ---");
+				
+				System.out.print("새 제목 : ");
+				String title = sc.nextLine();
+				
+				System.out.println("새 내용 : ");
+				String body = sc.nextLine();
+				
+				Connection conn = null;
+				PreparedStatement pstmt = null;
+				
+				try {
+					Class.forName("com.mysql.jdbc.Driver");
+					String url = "jdbc:mysql://127.0.0.1:3306/JAM?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
+					
+					conn = DriverManager.getConnection(url, "root", "");
+					System.out.println("연결 성공!");
+
+					String sql = "UPDATE article";
+					sql += " SET updateDate = NOW(),";
+					sql += " title = '" + title + "',";
+					sql += " `body` = '" + body + "'";
+					sql += " WHERE id = " + id + ";";
+
+					System.out.println(sql);
+
+					pstmt = conn.prepareStatement(sql);
+					
+					pstmt.executeUpdate();	// 리턴 타입 int
+					
+				} catch (ClassNotFoundException e) {
+					System.out.println("드라이버 로딩 실패");
+					
+				} catch (SQLException e) {
+					System.out.println("에러 : " + e);
+					
+				} finally {
+					try {
+						if (conn != null && !conn.isClosed()) {
+							conn.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					try {
+						if (pstmt != null && !pstmt.isClosed()) {
+							pstmt.close();
+						}
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				System.out.println(id + "번 글이 수정되었습니다.");
 			}
 		}
 		
