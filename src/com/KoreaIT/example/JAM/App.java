@@ -65,8 +65,90 @@ public class App {
 			return -1;
 		}
 		
+		// 회원가입
+		if (cmd.equals("member join")) {
+			System.out.println("--- 회원가입 ---");
+			
+			String loginId = null;
+			String loginPw = null;
+			String loginPwConfirm = null;
+			String name = null;
+			
+			while (true) {				
+				System.out.print("아이디 : ");
+				loginId = sc.nextLine().trim();		// 공백 데이터 위험 trim() 추가
+				
+				// "아이디" 필수 입력
+				if (loginId.length() == 0) {
+					System.out.println("아이디를 입력해 주세요.");
+					continue;
+				}
+				break;
+			}
+			
+			while (true) {
+				System.out.print("비밀번호 : ");
+				loginPw = sc.nextLine().trim();
+				
+				// "비밀번호" 필수 입력
+				if (loginPw.length() == 0) {
+					System.out.println("비밀번호를 입력해 주세요.");
+					continue;
+				}
+				
+				boolean loginPwCheck = true;	// 비밀번호가 일치한다고 가정
+				
+				while (true) {
+					System.out.print("비밀번호 확인 : ");
+					loginPwConfirm = sc.nextLine().trim();
+					
+					// "비밀번호 확인" 필수 입력
+					if (loginPwConfirm.length() == 0) {
+						System.out.println("비밀번호 확인을 입력해 주세요.");
+						continue;
+					}
+					
+					// 비밀번호 불일치
+					if (loginPw.equals(loginPwConfirm) == false) {
+						System.out.println("비밀번호가 일치하지 않습니다. 다시 입력해 주세요.");
+						loginPwCheck = false;
+						break;
+					}
+					break;		// 다시 "비밀번호"부터 입력
+				}
+				
+				if (loginPwCheck) {
+					break;		// 일치하면(true) 반복문 종료
+				}
+			}
+			
+			while (true) {				
+				System.out.print("이름 : ");
+				name = sc.nextLine().trim();
+				
+				// 필수 입력
+				if (name.length() == 0) {
+					System.out.println("이름을 입력해 주세요.");
+					continue;
+				}
+				break;
+			}
+			
+			SecSql sql = new SecSql();
+			
+			sql.append("INSERT INTO `member`");
+			sql.append("SET regDate = NOW(),");
+			sql.append("updateDate = NOW(),");
+			sql.append("loginId = ?,", loginId);
+			sql.append("loginPw = ?,", loginPw);
+			sql.append("`name` = ?", name);
+			
+			int id = DBUtil.insert(conn, sql);
+			
+			System.out.println(id + "번 회원님, 가입되었습니다.");
+			
 		// 입력
-		if (cmd.equals("article write")) {
+		} else if (cmd.equals("article write")) {
 			System.out.println("--- 게시물 작성 ---");
 			
 			System.out.print("제목 : ");
@@ -201,6 +283,6 @@ public class App {
 			
 		}
 	
-		return 0;
+		return 0;	// doAction
 	}
 }
