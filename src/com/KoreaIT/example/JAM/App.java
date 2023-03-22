@@ -76,35 +76,6 @@ public class App {
 			System.out.print("내용 : ");
 			String body = sc.nextLine();
 			
-//			PreparedStatement pstmt = null;
-//			
-//			try {
-//				String sql = "INSERT INTO article";
-//				sql += " SET regDate = NOW(),";
-//				sql += "updateDate = NOW(),";
-//				sql += "title = '" + title + "',";
-//				sql += "`body` = '" + body + "';";
-//
-//				System.out.println(sql);
-//
-//				pstmt = conn.prepareStatement(sql);
-//
-//				int affectedRow = pstmt.executeUpdate();
-//
-//				System.out.println("affectedRow : " + affectedRow);
-//
-//			} catch (SQLException e) {
-//				System.out.println("에러2 : " + e);
-//			} finally {
-//				try {
-//					if (pstmt != null && !pstmt.isClosed()) {
-//						pstmt.close();
-//					}
-//				} catch (SQLException e) {
-//					e.printStackTrace();
-//				}
-//			}
-			
 			SecSql sql = new SecSql();
 			
 			sql.append("INSERT INTO article");
@@ -113,7 +84,7 @@ public class App {
 			sql.append("title = ?,", title);
 			sql.append("`body` = ?", body);
 			
-			int id = DBUtil.insert(conn, sql);	// 리턴 타입 int
+			int id = DBUtil.insert(conn, sql);	// 입력 실행
 			
 			System.out.println(id + "번 글이 생성되었습니다.");
 			
@@ -135,49 +106,6 @@ public class App {
 			for (Map<String, Object> articleMap : articleListMap) {
 				articles.add(new Article(articleMap));
 			}
-			
-//			PreparedStatement pstmt = null;
-//			ResultSet rs = null;
-//			
-//			try {
-//				String sql = "SELECT * FROM article ORDER BY id DESC;";
-//
-//				System.out.println(sql);
-//
-//				pstmt = conn.prepareStatement(sql);
-//				
-//				rs = pstmt.executeQuery(sql);
-//
-//				while (rs.next()) {
-//					int id = rs.getInt("id");
-//					String regDate = rs.getString("regDate");
-//					String updateDate = rs.getString("updateDate");
-//					String title = rs.getString("title");
-//					String body = rs.getString("body");
-//
-//					Article article = new Article(id, regDate, updateDate, title, body);
-//					articles.add(article);
-//				}
-//
-//			} catch (SQLException e) {
-//				System.out.println("에러3 : " + e);
-//			} finally {
-//				try {
-//					if (rs != null && !rs.isClosed()) {
-//						rs.close();
-//					}
-//				} catch (SQLException e) {
-//					e.printStackTrace();
-//				}
-//				try {
-//					if (pstmt != null && !pstmt.isClosed()) {
-//						pstmt.close();
-//					}
-//				} catch (SQLException e) {
-//					e.printStackTrace();
-//				}
-//
-//			}
 			
 			if (articles.size() == 0) {
 				System.out.println("게시글이 없습니다.");
@@ -202,34 +130,6 @@ public class App {
 			System.out.print("새 내용 : ");
 			String body = sc.nextLine();
 			
-//			PreparedStatement pstmt = null;
-//			
-//			try {
-//				String sql = "UPDATE article";
-//				sql += " SET updateDate = NOW(),";
-//				sql += " title = '" + title + "',";
-//				sql += " `body` = '" + body + "'";
-//				sql += " WHERE id = " + id + ";";
-//
-//				System.out.println(sql);
-//
-//				pstmt = conn.prepareStatement(sql);
-//				
-//				pstmt.executeUpdate();	// 리턴 타입 int
-//				
-//			} catch (SQLException e) {
-//				System.out.println("에러4 : " + e);
-//				
-//			} finally {
-//				try {
-//					if (pstmt != null && !pstmt.isClosed()) {
-//						pstmt.close();
-//					}
-//				} catch (SQLException e) {
-//					e.printStackTrace();
-//				}
-//			}
-			
 			SecSql sql = new SecSql();
 			
 			sql.append("UPDATE article");
@@ -242,8 +142,37 @@ public class App {
 			
 			System.out.println(id + "번 글이 수정되었습니다.");
 			
+		// 삭제
+		} else if (cmd.startsWith("article delete ")) {
+			int id = Integer.parseInt(cmd.split(" ")[2]);
+			
+			System.out.println("--- 게시물 삭제 ---");
+			
+			SecSql sql = new SecSql();
+			
+			// 삭제 시, 해당 번호 글이 없어도 쿼리는 실행되기 때문에(적용되지는 않음)
+			// 조회 후 삭제한다.
+			sql.append("SELECT COUNT(*) FROM article");
+			sql.append("WHERE id = ?", id);
+			
+			int articlesCount = DBUtil.selectRowIntValue(conn, sql); // 0 (없음) 아니면 1 (있음)
+			
+			if (articlesCount == 0) {
+				System.out.println(id + "번 글은 존재하지 않습니다.");
+				return 0;	// 0인 이유 : doAction이 int 타입이고 -1이면 프로그램 종료.
+			}
+			
+			sql = new SecSql();
+			
+			sql.append("DELETE FROM article");
+			sql.append("WHERE id = ?", id);
+			
+			DBUtil.delete(conn, sql);		// 삭제 실행
+			
+			System.out.println(id + "번 글이 삭제되었습니다.");
+			
 		}
 	
-		return 0;		
+		return 0;
 	}
 }
