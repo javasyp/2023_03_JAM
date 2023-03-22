@@ -2,8 +2,6 @@ package com.KoreaIT.example.JAM;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-//import java.sql.PreparedStatement;
-//import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +10,7 @@ import java.util.Scanner;
 
 import com.KoreaIT.example.JAM.util.DBUtil;
 import com.KoreaIT.example.JAM.util.SecSql;
+import com.KoreaIT.example.JAM.util.util;
 
 public class App {
 	public void start() {
@@ -100,7 +99,7 @@ public class App {
 			sql.append("FROM article");
 			sql.append("ORDER BY id DESC;");
 			
-			// 목록 가져올 때(selectRows 실행 시) 반환 타입이 Map이기 때문에 리스트에 담기
+			// 목록 가져올 때(selectRows 실행 시) 반환 타입이 List
 			List<Map<String, Object>> articleListMap = DBUtil.selectRows(conn, sql);
 			
 			for (Map<String, Object> articleMap : articleListMap) {
@@ -117,6 +116,35 @@ public class App {
 			for (Article article : articles) {
 				System.out.printf("%d   /   %s\n", article.id, article.title);
 			}
+			
+		// 상세보기
+		}  else if (cmd.startsWith("article detail ")) {
+			int id = Integer.parseInt(cmd.split(" ")[2]);
+			
+			System.out.println("--- 게시물 상세보기 ---");
+			
+			SecSql sql = new SecSql();
+			
+			sql.append("SELECT *");
+			sql.append("FROM article");
+			sql.append("WHERE id = ?", id);
+			
+			// list는 복수(selectRows) 상세보기는 단수(selectRow)
+			Map<String, Object> articleMap = DBUtil.selectRow(conn, sql);
+			
+			// 해당 번호 글 있는지 확인
+			if (articleMap.isEmpty()) {
+				System.out.println(id + "번 글은 존재하지 않습니다.");
+				return 0;
+			}
+			
+			Article article = new Article(articleMap);
+			
+			System.out.println("번호 : " + article.id);
+			System.out.println("작성날짜 : " + util.getNowDateTimeStr(article.regDate));
+			System.out.println("수정날짜 : " + util.getNowDateTimeStr(article.updateDate));
+			System.out.println("제목 : " + article.title);
+			System.out.println("내용 : " + article.body);
 			
 		// 수정
 		} else if (cmd.startsWith("article modify ")) {
