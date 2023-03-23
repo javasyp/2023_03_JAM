@@ -1,9 +1,17 @@
 package com.KoreaIT.example.JAM.controller;
 
-import com.KoreaIT.example.JAM.util.DBUtil;
-import com.KoreaIT.example.JAM.util.SecSql;
+import java.sql.Connection;
+import java.util.Scanner;
+
+import com.KoreaIT.example.JAM.service.MemberService;
 
 public class MemberController extends Controller {
+	private MemberService memberService;
+	
+	public MemberController(Connection conn, Scanner sc) {
+		super(sc);		// super() : 부모의 생성자 호출
+		memberService = new MemberService(conn);
+	}
 	
 	public void doJoin(String cmd) {
 		System.out.println("--- 회원가입 ---");
@@ -24,13 +32,7 @@ public class MemberController extends Controller {
 			}
 			
 			// 아이디 중복 체크
-			SecSql sql = new SecSql();
-			
-			sql.append("SELECT COUNT(*) > 0");		// true/false로 반환 => 결과 true면 1, false면 0
-			sql.append("FROM `member`");
-			sql.append("WHERE loginId = ?", loginId);
-			
-			boolean isLoginIdDup = DBUtil.selectRowBooleanValue(conn, sql);
+			boolean isLoginIdDup = memberService.isLoginIdDup(loginId);
 			
 			if (isLoginIdDup) {
 				System.out.println(loginId + "는(은) 이미 사용 중인 아이디입니다.");
@@ -88,17 +90,8 @@ public class MemberController extends Controller {
 			break;
 		}
 		
-		SecSql sql = new SecSql();
+		int id = memberService.doJoin(loginId, loginPw, name);
 		
-		sql.append("INSERT INTO `member`");
-		sql.append("SET regDate = NOW(),");
-		sql.append("updateDate = NOW(),");
-		sql.append("loginId = ?,", loginId);
-		sql.append("loginPw = ?,", loginPw);
-		sql.append("`name` = ?", name);
-		
-		int id = DBUtil.insert(conn, sql);
-		
-		System.out.println(id + "번 회원님, 가입되었습니다.");	
+		System.out.println(name + " 회원님, 가입되었습니다.");	
 	}
 }
