@@ -74,7 +74,7 @@ public class App {
 			String loginPwConfirm = null;
 			String name = null;
 			
-			while (true) {				
+			while (true) {
 				System.out.print("아이디 : ");
 				loginId = sc.nextLine().trim();		// 공백 데이터 위험 trim() 추가
 				
@@ -83,6 +83,21 @@ public class App {
 					System.out.println("아이디를 입력해 주세요.");
 					continue;
 				}
+				
+				// 아이디 중복 체크				
+				SecSql sql = new SecSql();
+				
+				sql.append("SELECT COUNT(*) > 0");		// true/false로 반환 => 결과 true면 1, false면 0
+				sql.append("FROM `member`");
+				sql.append("WHERE loginId = ?", loginId);
+				
+				boolean isLoginIdDup = DBUtil.selectRowBooleanValue(conn, sql);
+				
+				if (isLoginIdDup) {
+					System.out.println(loginId + "는(은) 이미 사용 중인 아이디입니다.");
+					continue;
+				}
+				
 				break;
 			}
 			
@@ -126,7 +141,7 @@ public class App {
 				System.out.print("이름 : ");
 				name = sc.nextLine().trim();
 				
-				// 필수 입력
+				// "이름" 필수 입력
 				if (name.length() == 0) {
 					System.out.println("이름을 입력해 주세요.");
 					continue;
