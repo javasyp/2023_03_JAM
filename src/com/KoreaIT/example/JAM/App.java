@@ -74,8 +74,13 @@ public class App {
 			
 			memberController.login(cmd);
 			
+		// 프로필
+		} else if (cmd.equals("member profile")) {
+			
+			memberController.showProfile(cmd);
+			
 		// 회원가입
-		} else if (cmd.equals("article join")) {
+		} else if (cmd.equals("member join")) {
 				
 			memberController.doJoin(cmd);
 
