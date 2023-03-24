@@ -3,6 +3,7 @@ package com.KoreaIT.example.JAM.controller;
 import java.sql.Connection;
 import java.util.Scanner;
 
+import com.KoreaIT.example.JAM.dto.Member;
 import com.KoreaIT.example.JAM.service.MemberService;
 
 public class MemberController extends Controller {
@@ -11,6 +12,66 @@ public class MemberController extends Controller {
 	public MemberController(Connection conn, Scanner sc) {
 		super(sc);		// super() : 부모의 생성자 호출
 		memberService = new MemberService(conn);
+	}
+	
+	public void login(String cmd) {
+		System.out.println("--- 로그인 ---");
+		
+		String loginId = null;
+		
+		while (true) {
+			
+			System.out.print("로그인 아이디 : ");
+			loginId = sc.nextLine().trim();
+			
+			if (loginId.length() == 0) {
+				System.out.println("아이디를 입력해 주세요.");
+				continue;
+			}
+			
+			boolean isLoginIdDup = memberService.isLoginIdDup(loginId);
+			
+			if (isLoginIdDup == false) {
+				System.out.println(loginId + "는(은) 존재하지 않습니다.");
+				continue;
+			}
+			
+			break;
+		}
+		
+		Member member = memberService.getMemberByloginId(loginId);	// Map<> 써도 됨
+		
+		int maxTryCount = 3;
+		int tryCount = 0;
+		
+		String loginPw = null;
+		
+		while (true) {
+			// 비밀번호 입력 횟수 제한
+			if (tryCount > maxTryCount) {
+				System.out.println("비밀번호 확인 후 다시 입력해 주세요.");
+				break;
+			}
+			
+			System.out.print("비밀번호 : ");
+			loginPw = sc.nextLine().trim();
+			
+			if (loginPw.length() == 0) {
+				tryCount++;
+				System.out.println("비밀번호를 입력해 주세요.");
+				continue;
+			}
+			
+			if (member.loginPw.equals(loginPw) == false) {
+				tryCount++;
+				System.out.println("비밀번호가 일치하지 않습니다.");
+				continue;
+			}
+			
+			System.out.println(member.name + " 님, 환영합니다.");
+			break;
+		}
+		
 	}
 	
 	public void doJoin(String cmd) {
@@ -92,6 +153,7 @@ public class MemberController extends Controller {
 		
 		int id = memberService.doJoin(loginId, loginPw, name);
 		
-		System.out.println(name + " 회원님, 가입되었습니다.");	
+		System.out.println(id + "번 회원님, 가입되었습니다.");	
 	}
+
 }

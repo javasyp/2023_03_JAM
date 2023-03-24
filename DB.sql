@@ -50,3 +50,20 @@ loginPw = CONCAT('TestPw ',RAND()),
 `name` = CONCAT('TestName ',RAND());
 
 SELECT * FROM `member`;
+
+INSERT INTO `member`
+SET regDate = NOW(),
+updateDate = NOW(),
+loginId = 'test1',
+loginPw = 'test1',
+`name` = 'test1';
+
+SELECT COUNT(*) >= 1
+FROM article
+WHERE id = 1;
+
+SELECT COUNT(*) > 0
+FROM `member`
+WHERE loginId = 'test2';
+
+INSERT INTO article SET regDate = NOW() , updateDate = NOW() , title = 'aedsfg' , `body = 'cvbnawter';

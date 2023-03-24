@@ -64,9 +64,14 @@ public class App {
 
 		ArticleController articleController = new ArticleController(conn, sc);
 		
-		// 회원가입
-		if (cmd.equals("member join")) {
+		// 로그인
+		if (cmd.equals("member login")) {
 			
+			memberController.login(cmd);
+			
+		// 회원가입
+		} else if (cmd.equals("article join")) {
+				
 			memberController.doJoin(cmd);
 
 		// 입력
