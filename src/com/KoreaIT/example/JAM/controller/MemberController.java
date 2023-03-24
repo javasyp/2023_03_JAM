@@ -1,17 +1,14 @@
 package com.KoreaIT.example.JAM.controller;
 
-import java.sql.Connection;
-import java.util.Scanner;
-
+import com.KoreaIT.example.JAM.container.Container;
 import com.KoreaIT.example.JAM.dto.Member;
 import com.KoreaIT.example.JAM.service.MemberService;
 
 public class MemberController extends Controller {
 	private MemberService memberService;
 	
-	public MemberController(Connection conn, Scanner sc) {
-		super(sc);		// super() : 부모의 생성자 호출
-		memberService = new MemberService(conn);
+	public MemberController() {
+		memberService = Container.memberService;
 	}
 	
 	public void login(String cmd) {
