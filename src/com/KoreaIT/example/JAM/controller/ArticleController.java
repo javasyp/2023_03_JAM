@@ -31,7 +31,9 @@ public class ArticleController extends Controller {
 		System.out.print("내용 : ");
 		String body = sc.nextLine();
 		
-		int id = articleService.doWrite(title, body);
+		int memberId = Container.session.loginedMemberId;
+		
+		int id = articleService.doWrite(memberId, title, body);
 		
 		System.out.println(id + "번 글이 생성되었습니다.");
 		
