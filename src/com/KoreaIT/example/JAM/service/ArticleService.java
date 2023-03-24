@@ -16,9 +16,9 @@ public class ArticleService {
 		this.articleDao = Container.articleDao;
 	}
 
-	public int doWrite(String title, String body) {
+	public int doWrite(int memberId, String title, String body) {
 		
-		return articleDao.doWrite(title, body);
+		return articleDao.doWrite(memberId, title, body);
 	}
 
 	public Map<String, Object> getArticleById(int id) {

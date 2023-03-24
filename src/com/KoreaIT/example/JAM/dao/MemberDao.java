@@ -14,6 +14,7 @@ public class MemberDao {
 	// 로그인 시 회원인지 확인
 	public Member getMemberByLoginId(String loginId) {
 		SecSql sql = new SecSql();
+		
 		sql.append("SELECT *");
 		sql.append("FROM article");
 		sql.append("WHERE loginId = ?", loginId);

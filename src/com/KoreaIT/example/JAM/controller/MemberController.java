@@ -11,7 +11,7 @@ public class MemberController extends Controller {
 		memberService = Container.memberService;
 	}
 	
-	// 회원가입
+	/* 회원가입 */
 	public void doJoin(String cmd) {
 		// 로그인/로그아웃 상태 체크
 		if (Container.session.isLogined()) {
@@ -170,8 +170,7 @@ public class MemberController extends Controller {
 		
 	}
 	
-	
-	// 프로필
+	/* 프로필 보기 */
 	public void showProfile(String cmd) {
 		if (Container.session.isLogined() == false) {
 			System.out.println("로그인 상태가 아닙니다");
@@ -180,7 +179,7 @@ public class MemberController extends Controller {
 		}
 	}
 	
-	// 로그아웃
+	/* 로그아웃 */
 	public void logout(String cmd) {
 		if (Container.session.isLogined() == false) {
 			System.out.println("로그인 상태가 아닙니다");

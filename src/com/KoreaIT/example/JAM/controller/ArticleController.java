@@ -14,7 +14,8 @@ public class ArticleController extends Controller {
 	public ArticleController() {
 		articleService = Container.articleService;
 	}
-
+	
+	/* 게시물 작성 */
 	public void doWrite(String cmd) {
 		// 로그인/로그아웃 상태 체크
 		if (Container.session.isLogined() == false) {
@@ -35,9 +36,9 @@ public class ArticleController extends Controller {
 		System.out.println(id + "번 글이 생성되었습니다.");
 		
 	}
-
+	
+	/* 게시물 목록 */
 	public void showList(String cmd) {
-		System.out.println("--- 게시물 목록 ---");
 		
 		List<Article> articles = articleService.getArticlesCount();
 		
@@ -45,6 +46,8 @@ public class ArticleController extends Controller {
 			System.out.println("게시글이 없습니다.");
 			return;
 		}
+		
+		System.out.println("--- 게시물 목록 ---");
 
 		System.out.println("번호  /  제목");
 		
@@ -53,12 +56,11 @@ public class ArticleController extends Controller {
 		}
 		
 	}
-
+	
+	/* 게시물 상세보기 */
 	public void showDetail(String cmd) {
 
 		int id = Integer.parseInt(cmd.split(" ")[2]);
-		
-		System.out.println("--- 게시물 상세보기 ---");
 		
 		Map<String, Object> articleMap = articleService.getArticleById(id);
 		
@@ -67,6 +69,8 @@ public class ArticleController extends Controller {
 			System.out.println(id + "번 글은 존재하지 않습니다.");
 			return;
 		}
+		
+		System.out.println("--- 게시물 상세보기 ---");
 		
 		Article article = new Article(articleMap);
 		
@@ -77,7 +81,8 @@ public class ArticleController extends Controller {
 		System.out.println("내용 : " + article.body);
 		
 	}
-
+	
+	/* 게시물 수정 */
 	public void doModify(String cmd) {
 		// 로그인/로그아웃 상태 체크
 		if (Container.session.isLogined() == false) {
@@ -108,6 +113,7 @@ public class ArticleController extends Controller {
 		
 	}
 
+	/* 게시글 삭제 */
 	public void doDelete(String cmd) {
 		// 로그인/로그아웃 상태 체크
 		if (Container.session.isLogined() == false) {
@@ -117,14 +123,14 @@ public class ArticleController extends Controller {
 		
 		int id = Integer.parseInt(cmd.split(" ")[2]);
 		
-		System.out.println("--- 게시물 삭제 ---");
-		
 		int articlesCount = articleService.getArticlesCount(id);
 		
 		if (articlesCount == 0) {
 			System.out.println(id + "번 글은 존재하지 않습니다.");
 			return;	// 0인 이유 : doAction이 int 타입이고 -1이면 프로그램 종료.
 		}
+		
+		System.out.println("--- 게시물 삭제 ---");
 		
 		articleService.doDelete(id);
 		
