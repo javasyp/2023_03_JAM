@@ -11,71 +11,14 @@ public class MemberController extends Controller {
 		memberService = Container.memberService;
 	}
 	
-	public void login(String cmd) {
-		System.out.println("--- 로그인 ---");
-		
-		String loginId = null;
-		
-		while (true) {
-			
-			System.out.print("로그인 아이디 : ");
-			loginId = sc.nextLine().trim();
-			
-			if (loginId.length() == 0) {
-				System.out.println("아이디를 입력해 주세요.");
-				continue;
-			}
-			
-			boolean isLoginIdDup = memberService.isLoginIdDup(loginId);
-			
-			if (isLoginIdDup == false) {
-				System.out.println(loginId + "는(은) 존재하지 않습니다.");
-				continue;
-			}
-			
-			break;
-		}
-		
-		Member member = memberService.getMemberByloginId(loginId);	// Map<> 써도 됨
-		
-		int maxTryCount = 3;
-		int tryCount = 0;
-		
-		String loginPw = null;
-		
-		while (true) {
-			// 비밀번호 입력 횟수 제한
-			if (tryCount > maxTryCount) {
-				System.out.println("비밀번호 확인 후 다시 입력해 주세요.");
-				break;
-			}
-			
-			System.out.print("비밀번호 : ");
-			loginPw = sc.nextLine().trim();
-			
-			if (loginPw.length() == 0) {
-				tryCount++;
-				System.out.println("비밀번호를 입력해 주세요.");
-				continue;
-			}
-			
-			if (member.loginPw.equals(loginPw) == false) {
-				tryCount++;
-				System.out.println("비밀번호가 일치하지 않습니다.");
-				continue;
-			}
-			
-			System.out.println(member.name + " 님, 환영합니다.");
-			
-			Container.session.loginedMember = member;
-			Container.session.loginedMemberId = member.id;
-			
-			break;
-		}
-		
-	}
-	
+	// 회원가입
 	public void doJoin(String cmd) {
+		// 로그인/로그아웃 상태 체크
+		if (Container.session.isLogined()) {
+			System.out.println("로그아웃 후 이용해 주세요.");
+			return;
+		}
+		
 		System.out.println("--- 회원가입 ---");
 		
 		String loginId = null;
@@ -156,12 +99,93 @@ public class MemberController extends Controller {
 		
 		System.out.println(id + "번 회원님, 가입되었습니다.");	
 	}
-
+	
+	/* 로그인 */
+	public void login(String cmd) {
+		// 로그인/로그아웃 상태 체크
+		if (Container.session.isLogined()) {
+			System.out.println("로그아웃 후 이용해 주세요.");
+			return;
+		}
+		
+		System.out.println("--- 로그인 ---");
+		
+		String loginId = null;
+		
+		while (true) {
+			
+			System.out.print("로그인 아이디 : ");
+			loginId = sc.nextLine().trim();
+			
+			if (loginId.length() == 0) {
+				System.out.println("아이디를 입력해 주세요.");
+				continue;
+			}
+			
+			boolean isLoginIdDup = memberService.isLoginIdDup(loginId);
+			
+			if (isLoginIdDup == false) {
+				System.out.println(loginId + "는(은) 존재하지 않습니다.");
+				continue;
+			}
+			
+			break;
+		}
+		
+		Member member = memberService.getMemberByloginId(loginId);	// Map<> 써도 됨
+		
+		int maxTryCount = 3;
+		int tryCount = 0;
+		
+		String loginPw = null;
+		
+		while (true) {
+			// 비밀번호 입력 횟수 제한
+			if (tryCount > maxTryCount) {
+				System.out.println("비밀번호 확인 후 다시 입력해 주세요.");
+				break;
+			}
+			
+			System.out.print("비밀번호 : ");
+			loginPw = sc.nextLine().trim();
+			
+			if (loginPw.length() == 0) {
+				tryCount++;
+				System.out.println("비밀번호를 입력해 주세요.");
+				continue;
+			}
+			
+			if (member.loginPw.equals(loginPw) == false) {
+				tryCount++;
+				System.out.println("비밀번호가 일치하지 않습니다.");
+				continue;
+			}
+			
+			System.out.println(member.name + " 님, 환영합니다.");
+			
+			Container.session.login(member);
+			
+			break;
+		}
+		
+	}
+	
+	
+	// 프로필
 	public void showProfile(String cmd) {
-		if (Container.session.loginedMemberId == -1) {
+		if (Container.session.isLogined() == false) {
 			System.out.println("로그인 상태가 아닙니다");
 		} else {
 			System.out.println(Container.session.loginedMember);
+		}
+	}
+	
+	// 로그아웃
+	public void logout(String cmd) {
+		if (Container.session.isLogined() == false) {
+			System.out.println("로그인 상태가 아닙니다");
+		} else {
+			Container.session.logout();
 		}
 	}
 

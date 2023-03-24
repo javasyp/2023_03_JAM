@@ -74,6 +74,11 @@ public class App {
 			
 			memberController.login(cmd);
 			
+		// 로그아웃
+		} else if (cmd.equals("member logout")) {
+			
+			memberController.logout(cmd);
+			
 		// 프로필
 		} else if (cmd.equals("member profile")) {
 			
