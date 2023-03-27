@@ -40,16 +40,33 @@ public class ArticleController extends Controller {
 	
 	/* 게시물 목록 */
 	public void showList(String cmd) {
+		System.out.println("--- 게시물 목록 ---");
 		
-		List<Article> articles = articleService.getArticlesCount();
+		String[] cmdBits = cmd.split(" ");
+
+		int page = 1;	// 페이징
+		
+		String searchKeyword = null;
+		
+		// 몇 페이지?
+		if (cmdBits.length >= 3) {
+			page = Integer.parseInt(cmdBits[2]);
+		}
+		
+		// 검색어
+		if (cmdBits.length >= 4) {
+			searchKeyword = cmdBits[3];
+		}
+		
+		int itemsInAPage = 5;	// 한 페이지에 보이는 글 개수
+		
+		List<Article> articles = articleService.getForPrintArticles(page, itemsInAPage, searchKeyword);
 		
 		if (articles.size() == 0) {
 			System.out.println("게시글이 없습니다.");
 			return;
 		}
 		
-		System.out.println("--- 게시물 목록 ---");
-
 		System.out.println("번호  /  작성자  /  제목  /  조회");
 		
 		for (Article article : articles) {

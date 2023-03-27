@@ -95,7 +95,7 @@ public class App {
 			articleController.doWrite(cmd);
 			
 		// 목록
-		} else if (cmd.equals("article list")) {
+		} else if (cmd.startsWith("article list")) {
 			
 			articleController.showList(cmd);
 			

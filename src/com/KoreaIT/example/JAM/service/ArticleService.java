@@ -1,10 +1,12 @@
 package com.KoreaIT.example.JAM.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.KoreaIT.example.JAM.dto.Article;
 import com.KoreaIT.example.JAM.container.Container;
 import com.KoreaIT.example.JAM.dao.ArticleDao;
+import com.KoreaIT.example.JAM.dto.Article;
 
 public class ArticleService {
 
@@ -29,6 +31,20 @@ public class ArticleService {
 		
 		return articleDao.getArticlesCount(id);
 	}
+	
+	public List<Article> getForPrintArticles(int page, int itemsInAPage, String searchKeyword) {
+		int limitFrom = (page - 1) * itemsInAPage;
+		int limitTake = itemsInAPage;
+
+		// 압축
+		Map<String, Object> args = new HashMap<>();
+		args.put("searchKeyword", searchKeyword);
+		args.put("limitFrom", limitFrom);
+		args.put("limitTake", limitTake);
+
+		return articleDao.getForPrintArticles(args);
+	}
+
 
 	public void doDelete(int id) {
 		
@@ -40,13 +56,14 @@ public class ArticleService {
 		articleDao.doModify(id, title, body);
 	}
 
-	public List<Article> getArticlesCount() {
+	public List<Article> getArticles() {
 		
 		return articleDao.getArticles();
 	}
 
 	public void increaseHit(int id) {
+		
 		articleDao.increaseHit(id);
 	}
-
+	
 }
