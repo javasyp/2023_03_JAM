@@ -41,6 +41,6 @@ public class Article extends Object {
 	@Override
 	public String toString() {
 		return "Article [id=" + id + ", regDate=" + regDate + ", updateDate=" + updateDate + ", memberId=" + memberId
-				+ ", title=" + title + ", body=" + body + "]";
+				+ ", title=" + title + ", body=" + body + ", hit=" + hit + "]";
 	}
 }

@@ -114,7 +114,7 @@ public class MemberController extends Controller {
 		
 		while (true) {
 			
-			System.out.print("로그인 아이디 : ");
+			System.out.print("아이디 : ");
 			loginId = sc.nextLine().trim();
 			
 			if (loginId.length() == 0) {
