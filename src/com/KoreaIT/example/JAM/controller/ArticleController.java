@@ -51,10 +51,10 @@ public class ArticleController extends Controller {
 		
 		System.out.println("--- 게시물 목록 ---");
 
-		System.out.println("번호  /  작성자  /  제목");
+		System.out.println("번호  /  작성자  /  제목  /  조회");
 		
 		for (Article article : articles) {
-			System.out.printf("%4d   /   %s   /   %s\n", article.id, article.extra_writer, article.title);
+			System.out.printf("%4d   /   %s   /   %s  /  %d\n", article.id, article.extra_writer, article.title, article.hit);
 		}
 		
 	}
@@ -63,6 +63,8 @@ public class ArticleController extends Controller {
 	public void showDetail(String cmd) {
 
 		int id = Integer.parseInt(cmd.split(" ")[2]);
+		
+		articleService.increaseHit(id);		// 조회수 증가
 		
 		Map<String, Object> articleMap = articleService.getArticleById(id);
 		
@@ -82,6 +84,7 @@ public class ArticleController extends Controller {
 		System.out.println("작성자 : " + article.extra_writer);
 		System.out.println("제목 : " + article.title);
 		System.out.println("내용 : " + article.body);
+		System.out.println("조회수 : " + article.hit);
 		
 	}
 	

@@ -10,6 +10,7 @@ public class Article extends Object {
 	public int memberId;
 	public String title;
 	public String body;
+	public int hit;
 	
 	public String extra_writer;
 	
@@ -29,6 +30,7 @@ public class Article extends Object {
 		this.memberId = (int) articleMap.get("memberId");
 		this.title = (String) articleMap.get("title");
 		this.body = (String) articleMap.get("body");
+		this.hit = (int) articleMap.get("hit");
 		// .get(필드명) -> 가져올 때 형 변환 필요
 		
 		if (articleMap.get("extra_writer") != null) {
