@@ -16,7 +16,7 @@ public class MemberDao {
 		SecSql sql = new SecSql();
 		
 		sql.append("SELECT *");
-		sql.append("FROM article");
+		sql.append("FROM `member`");
 		sql.append("WHERE loginId = ?", loginId);
 		
 		Map<String, Object> memberMap = DBUtil.selectRow(Container.conn, sql);

@@ -173,7 +173,7 @@ public class MemberController extends Controller {
 	/* 프로필 보기 */
 	public void showProfile(String cmd) {
 		if (Container.session.isLogined() == false) {
-			System.out.println("로그인 상태가 아닙니다");
+			System.out.println("로그인 상태가 아닙니다.");
 		} else {
 			System.out.println(Container.session.loginedMember);
 		}
